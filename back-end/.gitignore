@@ -2,6 +2,7 @@
 node_modules
 dist
 build
+RESTClient
 npm-debug.log
 .env
 .DS_Store
