@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import {
   Entity,
   Column,
@@ -12,16 +13,19 @@ class User {
   id: string;
 
   @Column()
-  provider: string;
+  name: string;
+
+  @Column()
+  email: string;
 
   @Column()
   password: string;
 
   @CreateDateColumn()
-  createdAt: Date;
+  created_at: Date;
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updated_at: Date;
 }
 
 export default User;
