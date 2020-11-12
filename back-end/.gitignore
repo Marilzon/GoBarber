@@ -1,8 +1,10 @@
 /*.js
-node_modules
-dist
-build
-RESTClient
+node_modules/
+dist/
+build/
+tmp/*
+!tmp/.gitkeep
+RESTClient/
 npm-debug.log
 .env
 .DS_Store
