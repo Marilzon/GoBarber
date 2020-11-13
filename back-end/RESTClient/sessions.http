@@ -1,0 +1,8 @@
+
+POST http://localhost:3333/sessions HTTP/1.1
+content-type: application/json
+
+{
+  "name": "Marilzon Sousa",
+  "password": "123456"
+}
