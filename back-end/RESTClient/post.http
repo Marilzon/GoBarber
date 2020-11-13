@@ -1,0 +1,7 @@
+POST http://localhost:3333/appointments HTTP/1.1
+content-type: application/json
+
+{
+  "provider_id": "77ae4178-4284-41b5-a0da-64c2c73f47d7",
+  "date": "{{$datetime 'YYYY-MM-DDTHH:mm:ss.SSSZZ' }}"
+}
