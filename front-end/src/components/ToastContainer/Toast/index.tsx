@@ -19,7 +19,7 @@ const icons = {
   success: <FiCheckCircle />,
 };
 
-const Toast: React.FC<ToastProps> = ({ message, style }) => {
+const Toast: React.FC<ToastProps> = ({ message }) => {
   const { removeToast } = useToast();
 
   useEffect(() => {
