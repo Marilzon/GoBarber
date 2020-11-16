@@ -3,6 +3,11 @@ import { FiLock, FiUser, FiMail } from 'react-icons/fi';
 import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
 import * as Yup from 'yup';
+import { Link, useHistory } from 'react-router-dom';
+
+import api from '../../services/api';
+
+import { useToast } from '../../hooks/Toast';
 import getValidationErrors from '../../utils/getValidationErrors';
 
 import logoSvg from '../../assets/logo.svg';
@@ -12,11 +17,18 @@ import Button from '../../components/Button';
 
 import { Container, Content, Background } from './styles';
 
+interface SignUpFormData {
+  name: string;
+  email: string;
+  password: string;
+}
+
 const SignUp: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
-  console.log(formRef);
+  const { addToast } = useToast();
+  const history = useHistory();
 
-  const handleSubmit = useCallback(async (data: string) => {
+  const handleSubmit = useCallback(async (data: SignUpFormData) => {
     try {
       formRef.current?.setErrors({});
 
@@ -27,15 +39,35 @@ const SignUp: React.FC = () => {
           .email('Digite um e-mail válido'),
         password: Yup.string().min(6, 'No minimo 6 digitos'),
       });
+
       await schema.validate(data, {
         abortEarly: false,
       });
-    } catch (err) {
-      const errors = getValidationErrors(err);
 
-      formRef.current?.setErrors(errors);
+      await api.post('/users', data);
+
+      history.push('/');
+
+      addToast({
+        type: 'success',
+        title: 'Cadastro realizado!',
+        description: 'Você ja pode fazer o logon!'
+      });
+
+    } catch (err) {
+      if (err instanceof Yup.ValidationError) {
+        const errors = getValidationErrors(err);
+
+        formRef.current?.setErrors(errors);
+      }
+
+      addToast({
+        type: 'error',
+        title: 'Erro no cadastro!',
+        description: 'Ocorreu ao cadastrar!',
+      });
     }
-  }, []);
+  }, [addToast, history]);
 
   return (
     <Container>
@@ -56,7 +88,7 @@ const SignUp: React.FC = () => {
           <Button type="submit">Cadastrar</Button>
         </Form>
 
-        <a href="login">Voltar</a>
+        <Link to="/">Voltar</Link>
       </Content>
     </Container>
   );
