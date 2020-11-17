@@ -28,46 +28,48 @@ const SignUp: React.FC = () => {
   const { addToast } = useToast();
   const history = useHistory();
 
-  const handleSubmit = useCallback(async (data: SignUpFormData) => {
-    try {
-      formRef.current?.setErrors({});
+  const handleSubmit = useCallback(
+    async (data: SignUpFormData) => {
+      try {
+        formRef.current?.setErrors({});
 
-      const schema = Yup.object().shape({
-        name: Yup.string().required('Nome obrigatório'),
-        email: Yup.string()
-          .required('E-Mail obrigatório')
-          .email('Digite um e-mail válido'),
-        password: Yup.string().min(6, 'No minimo 6 digitos'),
-      });
+        const schema = Yup.object().shape({
+          name: Yup.string().required('Nome obrigatório'),
+          email: Yup.string()
+            .required('E-Mail obrigatório')
+            .email('Digite um e-mail válido'),
+          password: Yup.string().min(6, 'No minimo 6 digitos'),
+        });
 
-      await schema.validate(data, {
-        abortEarly: false,
-      });
+        await schema.validate(data, {
+          abortEarly: false,
+        });
 
-      await api.post('/users', data);
+        await api.post('/users', data);
 
-      history.push('/');
+        history.push('/');
 
-      addToast({
-        type: 'success',
-        title: 'Cadastro realizado!',
-        description: 'Você ja pode fazer o logon!'
-      });
+        addToast({
+          type: 'success',
+          title: 'Cadastro realizado!',
+          description: 'Você ja pode fazer o logon!',
+        });
+      } catch (err) {
+        if (err instanceof Yup.ValidationError) {
+          const errors = getValidationErrors(err);
 
-    } catch (err) {
-      if (err instanceof Yup.ValidationError) {
-        const errors = getValidationErrors(err);
+          formRef.current?.setErrors(errors);
+        }
 
-        formRef.current?.setErrors(errors);
+        addToast({
+          type: 'error',
+          title: 'Erro no cadastro!',
+          description: 'Ocorreu ao cadastrar!',
+        });
       }
-
-      addToast({
-        type: 'error',
-        title: 'Erro no cadastro!',
-        description: 'Ocorreu ao cadastrar!',
-      });
-    }
-  }, [addToast, history]);
+    },
+    [addToast, history],
+  );
 
   return (
     <Container>
